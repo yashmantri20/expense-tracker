@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Button,
-  Drawer,
   DrawerBody,
   DrawerFooter,
   DrawerHeader,
@@ -14,62 +13,19 @@ import {
   Input,
   Select,
   Textarea,
-  useToast,
+  Drawer,
 } from '@chakra-ui/react';
-import { firestore } from '../../firebase';
 
-const SideDrawer = ({ id, isOpen, onClose }) => {
-  const [data, setData] = useState([]);
-  const [incomeCategory, setIncomeCategory] = useState('salary');
-  const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState('');
-
-  const firstField = React.useRef();
-  const month = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ][new Date().getMonth()];
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const res = await firestore.collection(`income/1/${month}`).doc(id).get();
-      setData(res.data());
-      setIncomeCategory(res.data().incomeCategory);
-      setAmount(res.data().amount);
-      setDescription(res.data().description);
-    };
-    fetchData();
-  }, [id, month]);
-
-  const incomeRef = firestore.collection(`income/1/${month}`).doc(id);
-
-  const toast = useToast();
-
-  const submitHandler = () => {
-    incomeRef.update({
-      incomeCategory: incomeCategory,
-      amount: amount,
-      description: description,
-    });
-    toast({
-      title: `toast`,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-    onClose();
-  };
-
+const DrawerComponent = ({
+  submitHandler,
+  onClose,
+  setCategory,
+  setAmount,
+  setDescription,
+  firstField,
+  isOpen,
+  type,
+}) => {
   return (
     <Drawer
       isOpen={isOpen}
@@ -89,21 +45,21 @@ const SideDrawer = ({ id, isOpen, onClose }) => {
                 <Select
                   ref={firstField}
                   id='income'
-                  value={data?.incomeCategory}
                   placeholder='Select a category'
-                  onChange={(e) => setIncomeCategory(e.target.value)}
+                  onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value='salary'>Salary</option>
-                  <option value='pocketmoney'>Pocket Money</option>
+                  {type.map((t) => (
+                    <option key={t.id} value={t.class}>
+                      {t.class}
+                    </option>
+                  ))}
                 </Select>
               </Box>
-
               <Box>
                 <FormLabel htmlFor='income'>Amount</FormLabel>
                 <Input
                   id='income'
                   placeholder='Please enter user name'
-                  defaultValue={data?.amount || ''}
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
@@ -112,7 +68,7 @@ const SideDrawer = ({ id, isOpen, onClose }) => {
                 <FormLabel htmlFor='desc'>Description</FormLabel>
                 <Textarea
                   id='desc'
-                  defaultValue={data?.description || ''}
+                  maxLength={50}
                   onChange={(e) => setDescription(e.target.value)}
                 />
               </Box>
@@ -133,4 +89,4 @@ const SideDrawer = ({ id, isOpen, onClose }) => {
   );
 };
 
-export default SideDrawer;
+export default DrawerComponent;

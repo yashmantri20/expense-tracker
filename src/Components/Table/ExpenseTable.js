@@ -22,40 +22,38 @@ import MobileTable from './MobileTable';
 import DesktopTable from './DesktopTable';
 import { AppContext } from '../../utils/context';
 
-function IncomeTable() {
+function ExpenseTable() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [id, setId] = useState('');
   const [month, setMonth] = useState(getMonth());
 
   const {
     dispatch,
-    state: { incomeMoney },
+    state: { expenseMoney },
   } = useContext(AppContext);
 
-  const incomeRef = firestore.collection(`income/1/${month}`);
+  const expenseRef = firestore.collection(`expense/1/${month}`);
 
-  const [income] = useCollectionData(incomeRef, { idField: 'id' });
+  const [expense] = useCollectionData(expenseRef, { idField: 'id' });
 
-  const r = firestore.collection(`income/1/${month}`).doc('Total');
-
+  const r = firestore.collection(`expense/1/${month}`).doc('Total');
   const editHandler = (id) => {
     onOpen();
     setId(id);
   };
 
   const deleteHandler = (id, amount) => {
-    firestore.collection(`income/1/${month}`).doc(id).delete();
+    firestore.collection(`expense/1/${month}`).doc(id).delete();
 
     r.set(
       {
-        totalmoney: parseInt(incomeMoney) - parseInt(amount),
+        totalmoney: parseInt(expenseMoney) - parseInt(amount),
       },
       { merge: true }
     );
-
     dispatch({
-      type: 'SET_INCOME_MONEY',
-      data: parseInt(incomeMoney) - parseInt(amount),
+      type: 'SET_EXPENSE_MONEY',
+      data: parseInt(expenseMoney) - parseInt(amount),
     });
 
     dispatch({
@@ -70,7 +68,7 @@ function IncomeTable() {
           month={month}
           setMonth={setMonth}
           months={months}
-          income={income}
+          income={expense}
           editHandler={editHandler}
           deleteHandler={deleteHandler}
         />
@@ -80,13 +78,13 @@ function IncomeTable() {
           month={month}
           setMonth={setMonth}
           months={months}
-          income={income}
+          income={expense}
           editHandler={editHandler}
           deleteHandler={deleteHandler}
         />
       </Box>
       {isOpen ? (
-        <SideDrawer isOpen={isOpen} onClose={onClose} id={id} type='income' />
+        <SideDrawer isOpen={isOpen} onClose={onClose} id={id} type='expense' />
       ) : (
         ''
       )}
@@ -94,4 +92,4 @@ function IncomeTable() {
   );
 }
 
-export default IncomeTable;
+export default ExpenseTable;

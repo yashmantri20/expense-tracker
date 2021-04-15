@@ -1,63 +1,62 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  Stack,
-  Box,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
-  useToast,
-} from '@chakra-ui/react';
+import React, { useContext, useRef, useState } from 'react';
+import { Button, useDisclosure, useToast } from '@chakra-ui/react';
 import { firestore } from '../../firebase';
+import DrawerComponent from './DrawerComponent';
+import { getMonth } from '../../utils/getMonth';
+import { expenseType } from '../../utils/categories';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { AppContext } from '../../utils/context';
 
 const ExpenseForm = () => {
-  const month = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ][new Date().getMonth()];
+  const month = getMonth();
+
+  const [expenseCategory, setExpenseCategory] = useState('salary');
+  const [amount, setAmount] = useState(0);
+  // const [money, setMoney] = useState(0);
+
+  const [description, setDescription] = useState('');
+  const firstField = useRef();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [incomeCategory, setIncomeCategory] = useState('salary');
-  const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState('');
-
-  const firstField = React.useRef();
-
-  const incomeRef = firestore.collection(`income/1/${month}`);
-
   const toast = useToast();
 
+  const {
+    dispatch,
+    state: { expenseMoney },
+  } = useContext(AppContext);
+
+  const expenseRef = firestore.collection(`expense/1/${month}`);
+
+  const r = firestore.collection(`expense/1/${month}`).doc('Total');
+
   const submitHandler = () => {
-    incomeRef.add({
-      incomeCategory: incomeCategory,
+    expenseRef.add({
+      category: expenseCategory,
       amount: amount,
       description: description,
       date: new Date().toLocaleDateString('en-US'),
     });
+
+    r.set(
+      {
+        totalmoney: parseInt(expenseMoney) + parseInt(amount),
+      },
+      { merge: true }
+    );
+
+    dispatch({
+      type: 'SET_EXPENSE_MONEY',
+      data: parseInt(expenseMoney) + parseInt(amount),
+    });
+
+    dispatch({
+      type: 'SET_REMAINING_MONEY',
+    });
+
     toast({
-      title: `toast`,
+      title: 'Expense Added',
       status: 'success',
-      duration: 9000,
+      duration: 4000,
       isClosable: true,
     });
     onClose();
@@ -66,64 +65,19 @@ const ExpenseForm = () => {
   return (
     <div className='App'>
       <Button colorScheme='teal' onClick={onOpen}>
-        Create user
+        Add Expense
       </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement='right'
-        initialFocusRef={firstField}
+
+      <DrawerComponent
         onClose={onClose}
-      >
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader borderBottomWidth='1px'>Add New Income</DrawerHeader>
-
-            <DrawerBody>
-              <Stack spacing='24px' mt={6}>
-                <Box>
-                  <FormLabel htmlFor='income'>Select Income Category</FormLabel>
-                  <Select
-                    ref={firstField}
-                    id='income'
-                    defaultValue='salary'
-                    onChange={(e) => setIncomeCategory(e.target.value)}
-                  >
-                    <option value='salary'>Salary</option>
-                    <option value='pocketmoney'>Pocket Money</option>
-                  </Select>
-                </Box>
-                <Box>
-                  <FormLabel htmlFor='income'>Amount</FormLabel>
-                  <Input
-                    id='income'
-                    placeholder='Please enter user name'
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                </Box>
-
-                <Box>
-                  <FormLabel htmlFor='desc'>Description</FormLabel>
-                  <Textarea
-                    id='desc'
-                    maxLength={50}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </Box>
-              </Stack>
-            </DrawerBody>
-
-            <DrawerFooter borderTopWidth='1px'>
-              <Button variant='outline' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='blue' onClick={submitHandler}>
-                Submit
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </DrawerOverlay>
-      </Drawer>
+        isOpen={isOpen}
+        setAmount={setAmount}
+        setDescription={setDescription}
+        setCategory={setExpenseCategory}
+        submitHandler={submitHandler}
+        firstField={firstField}
+        type={expenseType}
+      />
     </div>
   );
 };

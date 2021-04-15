@@ -1,63 +1,59 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerCloseButton,
-  useDisclosure,
-  Stack,
-  Box,
-  FormLabel,
-  Input,
-  Select,
-  Textarea,
-  useToast,
-} from '@chakra-ui/react';
+import React, { useContext, useRef, useState } from 'react';
+import { Button, Text, useDisclosure, useToast } from '@chakra-ui/react';
 import { firestore } from '../../firebase';
+import DrawerComponent from './DrawerComponent';
+import { getMonth } from '../../utils/getMonth';
+import { incomeType } from '../../utils/categories';
+import { MdAddCircle } from 'react-icons/md';
+import { AppContext } from '../../utils/context';
 
 const IncomeForm = () => {
-  const month = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ][new Date().getMonth()];
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const month = getMonth();
 
   const [incomeCategory, setIncomeCategory] = useState('salary');
   const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState('');
 
-  const firstField = React.useRef();
+  const [description, setDescription] = useState('');
+  const firstField = useRef();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+
+  const {
+    dispatch,
+    state: { incomeMoney },
+  } = useContext(AppContext);
 
   const incomeRef = firestore.collection(`income/1/${month}`);
-
-  const toast = useToast();
+  const r = firestore.collection(`income/1/${month}`).doc('Total');
 
   const submitHandler = () => {
     incomeRef.add({
-      incomeCategory: incomeCategory,
+      category: incomeCategory,
       amount: amount,
       description: description,
       date: new Date().toLocaleDateString('en-US'),
     });
+    r.set(
+      {
+        totalmoney: parseInt(incomeMoney) + parseInt(amount),
+      },
+      { merge: true }
+    );
+
+    dispatch({
+      type: 'SET_INCOME_MONEY',
+      data: parseInt(incomeMoney) + parseInt(amount),
+    });
+
+    dispatch({
+      type: 'SET_REMAINING_MONEY',
+    });
+
     toast({
-      title: `toast`,
+      title: 'Income Added',
       status: 'success',
-      duration: 9000,
+      duration: 4000,
       isClosable: true,
     });
     onClose();
@@ -65,65 +61,21 @@ const IncomeForm = () => {
 
   return (
     <div className='App'>
-      <Button colorScheme='teal' onClick={onOpen}>
-        Create user
-      </Button>
-      <Drawer
-        isOpen={isOpen}
-        placement='right'
-        initialFocusRef={firstField}
+      {/* <Button colorScheme='teal' borderRadius='50%' width='45px' height='45px'>
+        +
+      </Button> */}
+      <MdAddCircle size='45px' onClick={onOpen} cursor='pointer' />
+
+      <DrawerComponent
         onClose={onClose}
-      >
-        <DrawerOverlay>
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader borderBottomWidth='1px'>Add New Income</DrawerHeader>
-
-            <DrawerBody>
-              <Stack spacing='24px' mt={6}>
-                <Box>
-                  <FormLabel htmlFor='income'>Select Income Category</FormLabel>
-                  <Select
-                    ref={firstField}
-                    id='income'
-                    defaultValue='salary'
-                    onChange={(e) => setIncomeCategory(e.target.value)}
-                  >
-                    <option value='salary'>Salary</option>
-                    <option value='pocketmoney'>Pocket Money</option>
-                  </Select>
-                </Box>
-                <Box>
-                  <FormLabel htmlFor='income'>Amount</FormLabel>
-                  <Input
-                    id='income'
-                    placeholder='Please enter user name'
-                    onChange={(e) => setAmount(e.target.value)}
-                  />
-                </Box>
-
-                <Box>
-                  <FormLabel htmlFor='desc'>Description</FormLabel>
-                  <Textarea
-                    id='desc'
-                    maxLength={50}
-                    onChange={(e) => setDescription(e.target.value)}
-                  />
-                </Box>
-              </Stack>
-            </DrawerBody>
-
-            <DrawerFooter borderTopWidth='1px'>
-              <Button variant='outline' mr={3} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button colorScheme='blue' onClick={submitHandler}>
-                Submit
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </DrawerOverlay>
-      </Drawer>
+        isOpen={isOpen}
+        setAmount={setAmount}
+        setDescription={setDescription}
+        setCategory={setIncomeCategory}
+        submitHandler={submitHandler}
+        firstField={firstField}
+        type={incomeType}
+      />
     </div>
   );
 };
