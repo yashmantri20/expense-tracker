@@ -6,10 +6,18 @@ const initialState = {
   remainingMoney: 0,
   prevMonthIncome: 0,
   prevMonthExpense: 0,
+  incomePercentage: 0,
+  expensePercentage: 0,
+  loading: true,
 };
 
 const reducer = (state, action) => {
   switch (action.type) {
+    case 'SET_LOADING':
+      console.log('object');
+
+      return { ...state, loading: action.data };
+
     case 'SET_EXPENSE_MONEY':
       return { ...state, expenseMoney: action.data };
 
@@ -27,6 +35,28 @@ const reducer = (state, action) => {
 
     case 'SET_PREV_EXPENSE_MONEY':
       return { ...state, prevMonthExpense: action.data };
+
+    case 'SET_PERCENTAGE_INCOME':
+      console.log('object');
+
+      return {
+        ...state,
+        incomePercentage:
+          state.prevMonthIncome > 0
+            ? (state.incomeMoney - state.prevMonthIncome) /
+              state.prevMonthIncome
+            : 0,
+      };
+
+    case 'SET_PERCENTAGE_EXPENSE':
+      return {
+        ...state,
+        expensePercentage:
+          state.prevMonthExpense > 0
+            ? (state.expenseMoney - state.prevMonthExpense) /
+              state.prevMonthExpense
+            : 0,
+      };
 
     default:
       return { ...state };

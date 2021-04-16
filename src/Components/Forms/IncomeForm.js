@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Button, Text, useDisclosure, useToast } from '@chakra-ui/react';
-import { firestore } from '../../firebase';
+import { useDisclosure, useToast } from '@chakra-ui/react';
+import { auth, firestore } from '../../firebase';
 import DrawerComponent from './DrawerComponent';
 import { getMonth } from '../../utils/getMonth';
 import { incomeType } from '../../utils/categories';
@@ -24,8 +24,12 @@ const IncomeForm = () => {
     state: { incomeMoney },
   } = useContext(AppContext);
 
-  const incomeRef = firestore.collection(`income/1/${month}`);
-  const r = firestore.collection(`income/1/${month}`).doc('Total');
+  const incomeRef = firestore.collection(
+    `income/${auth.currentUser.uid}/${month}`
+  );
+  const r = firestore
+    .collection(`income/${auth.currentUser.uid}/${month}`)
+    .doc('Total');
 
   const submitHandler = () => {
     incomeRef.add({
@@ -49,6 +53,8 @@ const IncomeForm = () => {
     dispatch({
       type: 'SET_REMAINING_MONEY',
     });
+
+    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
 
     toast({
       title: 'Income Added',
@@ -75,6 +81,7 @@ const IncomeForm = () => {
         submitHandler={submitHandler}
         firstField={firstField}
         type={incomeType}
+        title='Income'
       />
     </div>
   );

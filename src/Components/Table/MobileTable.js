@@ -23,7 +23,7 @@ const MobileTable = ({
 }) => {
   return (
     <Table variant='striped' colorScheme='gray' size='sm'>
-      <TableCaption>Imperial to metric conversion factors</TableCaption>
+      <TableCaption>Expense Tracker</TableCaption>
       <Thead>
         <Tr>
           <Th>Category</Th>
@@ -48,29 +48,31 @@ const MobileTable = ({
         </Tr>
       </Thead>
       <Tbody>
-        {income?.map((d) => (
-          <Tr key={d.id}>
-            <Td>{d.category}</Td>
-            <Td>₹ {d.amount}</Td>
+        {income
+          ? income?.map((d) => (
+              <Tr key={d.id}>
+                <Td>{d.category}</Td>
+                <Td>₹ {d.amount}</Td>
 
-            <Td>
-              <Box
-                display='flex'
-                alignItems='center'
-                justifyContent='space-evenly'
-              >
-                <AiFillEdit
-                  size='25px'
-                  onClick={() => editHandler(d.id, d.amount)}
-                />
-                <AiFillDelete
-                  size='25px'
-                  onClick={() => deleteHandler(d.id, d.amount)}
-                />
-              </Box>
-            </Td>
-          </Tr>
-        ))}
+                <Td>
+                  <Box
+                    display='flex'
+                    alignItems='center'
+                    justifyContent='space-evenly'
+                  >
+                    <AiFillEdit
+                      size='25px'
+                      onClick={() => editHandler(d.id, d.amount)}
+                    />
+                    <AiFillDelete
+                      size='25px'
+                      onClick={() => deleteHandler(d.id, d.amount)}
+                    />
+                  </Box>
+                </Td>
+              </Tr>
+            ))
+          : 'No'}
       </Tbody>
     </Table>
   );

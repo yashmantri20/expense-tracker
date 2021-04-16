@@ -1,20 +1,7 @@
 import React, { useContext, useState } from 'react';
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableCaption,
-  Box,
-  useDisclosure,
-  Select,
-  Center,
-} from '@chakra-ui/react';
-import { firestore } from '../../firebase';
+import { Box, useDisclosure } from '@chakra-ui/react';
+import { auth, firestore } from '../../firebase';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 import SideDrawer from '../Drawer/EditDrawer';
 import { getMonth } from '../../utils/getMonth';
 import { months } from '../../utils/categories';
@@ -32,11 +19,15 @@ function IncomeTable() {
     state: { incomeMoney },
   } = useContext(AppContext);
 
-  const incomeRef = firestore.collection(`income/1/${month}`);
+  const incomeRef = firestore.collection(
+    `income/${auth.currentUser.uid}/${month}`
+  );
 
   const [income] = useCollectionData(incomeRef, { idField: 'id' });
 
-  const r = firestore.collection(`income/1/${month}`).doc('Total');
+  const r = firestore
+    .collection(`income/${auth.currentUser.uid}/${month}`)
+    .doc('Total');
 
   const editHandler = (id) => {
     onOpen();
@@ -44,7 +35,10 @@ function IncomeTable() {
   };
 
   const deleteHandler = (id, amount) => {
-    firestore.collection(`income/1/${month}`).doc(id).delete();
+    firestore
+      .collection(`income/${auth.currentUser.uid}/${month}`)
+      .doc(id)
+      .delete();
 
     r.set(
       {
@@ -61,6 +55,8 @@ function IncomeTable() {
     dispatch({
       type: 'SET_REMAINING_MONEY',
     });
+
+    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
   };
 
   return (

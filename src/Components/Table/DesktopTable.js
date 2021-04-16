@@ -23,7 +23,7 @@ const DesktopTable = ({
 }) => {
   return (
     <Table variant='striped' colorScheme='gray' size='sm'>
-      <TableCaption>Imperial to metric conversion factors</TableCaption>
+      <TableCaption>Expense Tracker</TableCaption>
       <Thead>
         <Tr>
           <Th>Category</Th>

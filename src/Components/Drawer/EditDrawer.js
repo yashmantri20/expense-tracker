@@ -16,7 +16,7 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react';
-import { firestore } from '../../firebase';
+import { auth, firestore } from '../../firebase';
 import { getMonth } from '../../utils/getMonth';
 import { AppContext } from '../../utils/context';
 
@@ -38,20 +38,10 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await firestore
-        .collection(`${type}/1/${month}`)
+        .collection(`${type}/${auth.currentUser.uid}/${month}`)
         .doc(id)
         .get();
       setData(res.data());
-
-      // type === 'expense'
-      //   ? dispatch({
-      //       type: 'SET_EXPENSE_MONEY',
-      //       data: parseInt(expenseMoney) - parseInt(res.data().amount),
-      //     })
-      //   : dispatch({
-      //       type: 'SET_INCOME_MONEY',
-      //       data: parseInt(incomeMoney) - parseInt(res.data().amount),
-      //     });
 
       type === 'expense'
         ? setMoney(parseInt(expenseMoney) - parseInt(res.data().amount))
@@ -62,10 +52,14 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
       setDescription(res.data().description);
     };
     fetchData();
-  }, [id, month, type]);
+  }, [id, month, type, expenseMoney, incomeMoney]);
 
-  const ref = firestore.collection(`${type}/1/${month}`).doc(id);
-  const r = firestore.collection(`${type}/1/${month}`).doc('Total');
+  const ref = firestore
+    .collection(`${type}/${auth.currentUser.uid}/${month}`)
+    .doc(id);
+  const r = firestore
+    .collection(`${type}/${auth.currentUser.uid}/${month}`)
+    .doc('Total');
 
   const toast = useToast();
 
@@ -76,7 +70,6 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
       description: description,
     });
 
-    console.log(money);
     if (type === 'expense') {
       r.set(
         {
@@ -105,6 +98,9 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
     dispatch({
       type: 'SET_REMAINING_MONEY',
     });
+
+    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+    dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
 
     toast({
       title: `toast`,

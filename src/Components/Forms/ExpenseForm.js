@@ -1,18 +1,17 @@
 import React, { useContext, useRef, useState } from 'react';
-import { Button, useDisclosure, useToast } from '@chakra-ui/react';
-import { firestore } from '../../firebase';
+import { useDisclosure, useToast } from '@chakra-ui/react';
+import { auth, firestore } from '../../firebase';
 import DrawerComponent from './DrawerComponent';
 import { getMonth } from '../../utils/getMonth';
 import { expenseType } from '../../utils/categories';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AppContext } from '../../utils/context';
+import { MdAddCircle } from 'react-icons/md';
 
 const ExpenseForm = () => {
   const month = getMonth();
 
   const [expenseCategory, setExpenseCategory] = useState('salary');
   const [amount, setAmount] = useState(0);
-  // const [money, setMoney] = useState(0);
 
   const [description, setDescription] = useState('');
   const firstField = useRef();
@@ -25,9 +24,13 @@ const ExpenseForm = () => {
     state: { expenseMoney },
   } = useContext(AppContext);
 
-  const expenseRef = firestore.collection(`expense/1/${month}`);
+  const expenseRef = firestore.collection(
+    `expense/${auth.currentUser.uid}/${month}`
+  );
 
-  const r = firestore.collection(`expense/1/${month}`).doc('Total');
+  const r = firestore
+    .collection(`expense/${auth.currentUser.uid}/${month}`)
+    .doc('Total');
 
   const submitHandler = () => {
     expenseRef.add({
@@ -53,6 +56,8 @@ const ExpenseForm = () => {
       type: 'SET_REMAINING_MONEY',
     });
 
+    dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
+
     toast({
       title: 'Expense Added',
       status: 'success',
@@ -64,10 +69,7 @@ const ExpenseForm = () => {
 
   return (
     <div className='App'>
-      <Button colorScheme='teal' onClick={onOpen}>
-        Add Expense
-      </Button>
-
+      <MdAddCircle size='45px' onClick={onOpen} cursor='pointer' />
       <DrawerComponent
         onClose={onClose}
         isOpen={isOpen}
@@ -77,6 +79,7 @@ const ExpenseForm = () => {
         submitHandler={submitHandler}
         firstField={firstField}
         type={expenseType}
+        title='Expense'
       />
     </div>
   );

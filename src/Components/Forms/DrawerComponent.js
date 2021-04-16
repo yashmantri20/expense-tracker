@@ -25,6 +25,7 @@ const DrawerComponent = ({
   firstField,
   isOpen,
   type,
+  title,
 }) => {
   return (
     <Drawer
@@ -36,15 +37,15 @@ const DrawerComponent = ({
       <DrawerOverlay>
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth='1px'>Add New Income</DrawerHeader>
+          <DrawerHeader borderBottomWidth='1px'>Add New {title}</DrawerHeader>
 
           <DrawerBody>
             <Stack spacing='24px' mt={6}>
               <Box>
-                <FormLabel htmlFor='income'>Select Income Category</FormLabel>
+                <FormLabel htmlFor={title}>Select {title} Category</FormLabel>
                 <Select
                   ref={firstField}
-                  id='income'
+                  id={title}
                   placeholder='Select a category'
                   onChange={(e) => setCategory(e.target.value)}
                 >
@@ -56,9 +57,9 @@ const DrawerComponent = ({
                 </Select>
               </Box>
               <Box>
-                <FormLabel htmlFor='income'>Amount</FormLabel>
+                <FormLabel htmlFor={title}>Amount</FormLabel>
                 <Input
-                  id='income'
+                  id={title}
                   placeholder='Please enter user name'
                   onChange={(e) => setAmount(e.target.value)}
                 />
