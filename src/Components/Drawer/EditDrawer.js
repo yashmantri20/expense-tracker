@@ -64,7 +64,7 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
   const toast = useToast();
 
   const submitHandler = () => {
-    if (category && amount && description) {
+    if (category && amount >= 0 && description) {
       ref.update({
         category: category,
         amount: amount,
@@ -112,7 +112,7 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
       onClose();
     } else {
       toast({
-        title: 'Please Enter All The Data',
+        title: 'Please Enter The Valid Data',
         status: 'error',
         duration: 4000,
         isClosable: true,
@@ -139,7 +139,7 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
                 <Select
                   ref={firstField}
                   id={title}
-                  value={data?.category}
+                  value={category}
                   placeholder='Select a category'
                   onChange={(e) => setCategory(e.target.value)}
                 >
@@ -159,7 +159,8 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
                 <FormLabel>Amount</FormLabel>
                 <Input
                   id='amount'
-                  placeholder='Please enter user name'
+                  type='number'
+                  placeholder='Please enter the amount'
                   defaultValue={data?.amount || ''}
                   onChange={(e) => setAmount(e.target.value)}
                 />

@@ -65,19 +65,19 @@ const DrawerComponent = ({
               <Box>
                 <FormLabel htmlFor={title}>Amount</FormLabel>
                 <Input
+                  type='number'
                   borderColor='grey'
                   id={title}
                   required
-                  placeholder='Please enter user name'
+                  placeholder='Please enter the amount'
                   onChange={(e) => setAmount(e.target.value)}
                 />
               </Box>
 
               <Box>
-                <FormLabel htmlFor='desc'>Description</FormLabel>
+                <FormLabel>Description</FormLabel>
                 <Textarea
                   borderColor='grey'
-                  id='desc'
                   required
                   maxLength={50}
                   onChange={(e) => setDescription(e.target.value)}

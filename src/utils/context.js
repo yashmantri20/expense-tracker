@@ -55,7 +55,6 @@ const reducer = (state, action) => {
       };
 
     case 'SET_ALL':
-      console.log('object');
       return {
         expenseMoney: 0,
         incomeMoney: 0,

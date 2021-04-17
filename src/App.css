@@ -19,24 +19,56 @@
   background-color: #272525;
   color: white;
   font-family: 'Montserrat';
+  min-height: 100vh;
 }
 
 .tab {
   color: white;
 }
 
-@media only screen and (min-width: 600px) {
+.heading {
+  margin: auto 0px;
+  font-size: 20px;
+  padding-left: 6px;
+  font-weight: 700;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+}
+
+.signout-btn {
+  margin-left: auto;
+  color: black;
+}
+
+@media only screen and (min-width: 770px) {
   .mobile-tablet {
     display: none;
   }
+}
 
-  .dashboard {
-    height: 100vh;
+@media only screen and (max-width: 770px) {
+  .desktop-tablet {
+    display: none;
+  }
+  .heading {
+    font-size: 16px;
+  }
+  .logo {
+    height: 35px;
+    width: 35px;
+  }
+
+  .signout-btn {
+    height: 30px !important;
+    width: 90px !important;
   }
 }
 
-@media only screen and (max-width: 600px) {
-  .desktop-tablet {
-    display: none;
+@media only screen and (max-width: 760px) {
+  #tabs-7--tab-2 {
+    display: none !important;
   }
 }

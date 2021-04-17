@@ -32,7 +32,7 @@ const IncomeForm = () => {
     .doc('Total');
 
   const submitHandler = () => {
-    if (incomeCategory && amount && description) {
+    if (incomeCategory && amount >= 0 && description) {
       incomeRef.add({
         category: incomeCategory,
         amount: amount,
@@ -63,10 +63,13 @@ const IncomeForm = () => {
         duration: 4000,
         isClosable: true,
       });
+      setDescription();
+      setAmount();
+      setIncomeCategory();
       onClose();
     } else {
       toast({
-        title: 'Please Enter All The Data',
+        title: 'Please Enter The Valid Data',
         status: 'error',
         duration: 4000,
         isClosable: true,

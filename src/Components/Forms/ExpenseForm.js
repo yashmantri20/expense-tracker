@@ -33,7 +33,7 @@ const ExpenseForm = () => {
     .doc('Total');
 
   const submitHandler = () => {
-    if (expenseCategory && amount && description) {
+    if (expenseCategory && amount >= 0 && description) {
       expenseRef.add({
         category: expenseCategory,
         amount: amount,
@@ -65,10 +65,15 @@ const ExpenseForm = () => {
         duration: 4000,
         isClosable: true,
       });
+      console.log(expenseCategory, amount, description);
+
+      setDescription();
+      setAmount();
+      setExpenseCategory();
       onClose();
     } else {
       toast({
-        title: 'Please Enter All The Data',
+        title: 'Please Enter The Valid Data',
         status: 'error',
         duration: 4000,
         isClosable: true,
