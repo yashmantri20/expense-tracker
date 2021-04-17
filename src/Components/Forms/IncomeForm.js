@@ -10,10 +10,10 @@ import { AppContext } from '../../utils/context';
 const IncomeForm = () => {
   const month = getMonth();
 
-  const [incomeCategory, setIncomeCategory] = useState('salary');
-  const [amount, setAmount] = useState(0);
+  const [incomeCategory, setIncomeCategory] = useState();
+  const [amount, setAmount] = useState();
 
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState();
   const firstField = useRef();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -32,37 +32,46 @@ const IncomeForm = () => {
     .doc('Total');
 
   const submitHandler = () => {
-    incomeRef.add({
-      category: incomeCategory,
-      amount: amount,
-      description: description,
-      date: new Date().toLocaleDateString('en-US'),
-    });
-    r.set(
-      {
-        totalmoney: parseInt(incomeMoney) + parseInt(amount),
-      },
-      { merge: true }
-    );
+    if (incomeCategory && amount && description) {
+      incomeRef.add({
+        category: incomeCategory,
+        amount: amount,
+        description: description,
+        date: new Date().toLocaleDateString('en-US'),
+      });
+      r.set(
+        {
+          totalmoney: parseInt(incomeMoney) + parseInt(amount),
+        },
+        { merge: true }
+      );
 
-    dispatch({
-      type: 'SET_INCOME_MONEY',
-      data: parseInt(incomeMoney) + parseInt(amount),
-    });
+      dispatch({
+        type: 'SET_INCOME_MONEY',
+        data: parseInt(incomeMoney) + parseInt(amount),
+      });
 
-    dispatch({
-      type: 'SET_REMAINING_MONEY',
-    });
+      dispatch({
+        type: 'SET_REMAINING_MONEY',
+      });
 
-    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+      dispatch({ type: 'SET_PERCENTAGE_INCOME' });
 
-    toast({
-      title: 'Income Added',
-      status: 'success',
-      duration: 4000,
-      isClosable: true,
-    });
-    onClose();
+      toast({
+        title: 'Income Added',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      });
+      onClose();
+    } else {
+      toast({
+        title: 'Please Enter All The Data',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

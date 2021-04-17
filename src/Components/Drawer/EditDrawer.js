@@ -20,11 +20,11 @@ import { auth, firestore } from '../../firebase';
 import { getMonth } from '../../utils/getMonth';
 import { AppContext } from '../../utils/context';
 
-const EditDrawer = ({ id, isOpen, onClose, type }) => {
+const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
   const [data, setData] = useState([]);
-  const [category, setCategory] = useState('salary');
-  const [amount, setAmount] = useState(0);
-  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState();
+  const [amount, setAmount] = useState();
+  const [description, setDescription] = useState();
   const [money, setMoney] = useState(0);
 
   const firstField = useRef();
@@ -38,12 +38,12 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
   useEffect(() => {
     const fetchData = async () => {
       const res = await firestore
-        .collection(`${type}/${auth.currentUser.uid}/${month}`)
+        .collection(`${title}/${auth.currentUser.uid}/${month}`)
         .doc(id)
         .get();
       setData(res.data());
 
-      type === 'expense'
+      title === 'expense'
         ? setMoney(parseInt(expenseMoney) - parseInt(res.data().amount))
         : setMoney(parseInt(incomeMoney) - parseInt(res.data().amount));
 
@@ -52,63 +52,72 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
       setDescription(res.data().description);
     };
     fetchData();
-  }, [id, month, type, expenseMoney, incomeMoney]);
+  }, [id, month, title, expenseMoney, incomeMoney]);
 
   const ref = firestore
-    .collection(`${type}/${auth.currentUser.uid}/${month}`)
+    .collection(`${title}/${auth.currentUser.uid}/${month}`)
     .doc(id);
   const r = firestore
-    .collection(`${type}/${auth.currentUser.uid}/${month}`)
+    .collection(`${title}/${auth.currentUser.uid}/${month}`)
     .doc('Total');
 
   const toast = useToast();
 
   const submitHandler = () => {
-    ref.update({
-      category: category,
-      amount: amount,
-      description: description,
-    });
-
-    if (type === 'expense') {
-      r.set(
-        {
-          totalmoney: money + parseInt(amount),
-        },
-        { merge: true }
-      );
-
-      dispatch({
-        type: 'SET_EXPENSE_MONEY',
-        data: money + parseInt(amount),
+    if (category && amount && description) {
+      ref.update({
+        category: category,
+        amount: amount,
+        description: description,
       });
-    } else {
-      r.set(
-        {
-          totalmoney: money + parseInt(amount),
-        },
-        { merge: true }
-      );
+
+      if (title === 'expense') {
+        r.set(
+          {
+            totalmoney: money + parseInt(amount),
+          },
+          { merge: true }
+        );
+
+        dispatch({
+          type: 'SET_EXPENSE_MONEY',
+          data: money + parseInt(amount),
+        });
+      } else {
+        r.set(
+          {
+            totalmoney: money + parseInt(amount),
+          },
+          { merge: true }
+        );
+        dispatch({
+          type: 'SET_INCOME_MONEY',
+          data: money + parseInt(amount),
+        });
+      }
+
       dispatch({
-        type: 'SET_INCOME_MONEY',
-        data: money + parseInt(amount),
+        type: 'SET_REMAINING_MONEY',
+      });
+
+      dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+      dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
+
+      toast({
+        title: `${name} Updated`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose();
+    } else {
+      toast({
+        title: 'Please Enter All The Data',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
       });
     }
-
-    dispatch({
-      type: 'SET_REMAINING_MONEY',
-    });
-
-    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
-    dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
-
-    toast({
-      title: `toast`,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-    onClose();
   };
 
   return (
@@ -119,30 +128,37 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
       onClose={onClose}
     >
       <DrawerOverlay>
-        <DrawerContent>
+        <DrawerContent style={{ background: '#272525', color: 'white' }}>
           <DrawerCloseButton />
-          <DrawerHeader borderBottomWidth='1px'>Add New Income</DrawerHeader>
+          <DrawerHeader borderBottomWidth='1px'>Add New {name} </DrawerHeader>
 
           <DrawerBody>
             <Stack spacing='24px' mt={6}>
               <Box>
-                <FormLabel htmlFor='income'>Select Income Category</FormLabel>
+                <FormLabel>Select {name} Category</FormLabel>
                 <Select
                   ref={firstField}
-                  id='income'
+                  id={title}
                   value={data?.category}
                   placeholder='Select a category'
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value='salary'>Salary</option>
-                  <option value='pocketmoney'>Pocket Money</option>
+                  {type.map((t) => (
+                    <option
+                      key={t.id}
+                      value={t.class}
+                      style={{ color: 'black' }}
+                    >
+                      {t.class}
+                    </option>
+                  ))}
                 </Select>
               </Box>
 
               <Box>
-                <FormLabel htmlFor='income'>Amount</FormLabel>
+                <FormLabel>Amount</FormLabel>
                 <Input
-                  id='income'
+                  id='amount'
                   placeholder='Please enter user name'
                   defaultValue={data?.amount || ''}
                   onChange={(e) => setAmount(e.target.value)}
@@ -152,6 +168,7 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
               <Box>
                 <FormLabel htmlFor='desc'>Description</FormLabel>
                 <Textarea
+                  maxLength={50}
                   id='desc'
                   defaultValue={data?.description || ''}
                   onChange={(e) => setDescription(e.target.value)}
@@ -165,7 +182,7 @@ const EditDrawer = ({ id, isOpen, onClose, type }) => {
               Cancel
             </Button>
             <Button colorScheme='blue' onClick={submitHandler}>
-              Submit
+              Update {name}
             </Button>
           </DrawerFooter>
         </DrawerContent>

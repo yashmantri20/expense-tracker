@@ -22,7 +22,7 @@ const DesktopTable = ({
   deleteHandler,
 }) => {
   return (
-    <Table variant='striped' colorScheme='gray' size='sm'>
+    <Table variant='striped' colorScheme='gray' size='sm' color='black'>
       <TableCaption>Expense Tracker</TableCaption>
       <Thead>
         <Tr>
@@ -35,11 +35,17 @@ const DesktopTable = ({
               <Select
                 width='100px'
                 id='income'
+                outline='none'
+                border='none'
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
               >
                 {months.map((m) => (
-                  <option key={m.id} value={m.monthData}>
+                  <option
+                    key={m.id}
+                    value={m.monthData}
+                    style={{ color: 'black' }}
+                  >
                     {m.monthData}
                   </option>
                 ))}
@@ -51,7 +57,7 @@ const DesktopTable = ({
       <Tbody>
         {income?.map((d) =>
           d.id !== 'Total' ? (
-            <Tr key={d.id}>
+            <Tr key={d.id} className='table-data'>
               <Td>{d.category}</Td>
               <Td>₹ {d.amount}</Td>
               <Td>{d.date}</Td>
@@ -65,9 +71,11 @@ const DesktopTable = ({
                 >
                   <AiFillEdit
                     size='25px'
+                    cursor='pointer'
                     onClick={() => editHandler(d.id, d.amount)}
                   />
                   <AiFillDelete
+                    cursor='pointer'
                     size='25px'
                     onClick={() => deleteHandler(d.id, d.amount)}
                   />

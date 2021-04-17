@@ -35,7 +35,7 @@ const DrawerComponent = ({
       onClose={onClose}
     >
       <DrawerOverlay>
-        <DrawerContent>
+        <DrawerContent style={{ background: '#272525', color: 'white' }}>
           <DrawerCloseButton />
           <DrawerHeader borderBottomWidth='1px'>Add New {title}</DrawerHeader>
 
@@ -44,13 +44,19 @@ const DrawerComponent = ({
               <Box>
                 <FormLabel htmlFor={title}>Select {title} Category</FormLabel>
                 <Select
+                  borderColor='grey'
                   ref={firstField}
                   id={title}
+                  required
                   placeholder='Select a category'
                   onChange={(e) => setCategory(e.target.value)}
                 >
                   {type.map((t) => (
-                    <option key={t.id} value={t.class}>
+                    <option
+                      key={t.id}
+                      value={t.class}
+                      style={{ color: 'black' }}
+                    >
                       {t.class}
                     </option>
                   ))}
@@ -59,7 +65,9 @@ const DrawerComponent = ({
               <Box>
                 <FormLabel htmlFor={title}>Amount</FormLabel>
                 <Input
+                  borderColor='grey'
                   id={title}
+                  required
                   placeholder='Please enter user name'
                   onChange={(e) => setAmount(e.target.value)}
                 />
@@ -68,7 +76,9 @@ const DrawerComponent = ({
               <Box>
                 <FormLabel htmlFor='desc'>Description</FormLabel>
                 <Textarea
+                  borderColor='grey'
                   id='desc'
+                  required
                   maxLength={50}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -81,7 +91,7 @@ const DrawerComponent = ({
               Cancel
             </Button>
             <Button colorScheme='blue' onClick={submitHandler}>
-              Submit
+              Add {title}
             </Button>
           </DrawerFooter>
         </DrawerContent>

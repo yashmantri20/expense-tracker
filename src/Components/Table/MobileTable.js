@@ -34,11 +34,17 @@ const MobileTable = ({
               <Select
                 width='100px'
                 id='income'
+                outline='none'
+                border='none'
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
               >
                 {months.map((m) => (
-                  <option key={m.id} value={m.monthData}>
+                  <option
+                    key={m.id}
+                    value={m.monthData}
+                    style={{ color: 'black' }}
+                  >
                     {m.monthData}
                   </option>
                 ))}
@@ -48,32 +54,58 @@ const MobileTable = ({
         </Tr>
       </Thead>
       <Tbody>
-        {income
-          ? income?.map((d) => (
-              <Tr key={d.id}>
-                <Td>{d.category}</Td>
-                <Td>₹ {d.amount}</Td>
+        {income?.map((d) =>
+          d.id !== 'Total' ? (
+            <Tr key={d.id} className='table-data'>
+              <Td>{d.category}</Td>
+              <Td>₹ {d.amount}</Td>
 
-                <Td>
-                  <Box
-                    display='flex'
-                    alignItems='center'
-                    justifyContent='space-evenly'
-                  >
-                    <AiFillEdit
-                      size='25px'
-                      onClick={() => editHandler(d.id, d.amount)}
-                    />
-                    <AiFillDelete
-                      size='25px'
-                      onClick={() => deleteHandler(d.id, d.amount)}
-                    />
-                  </Box>
-                </Td>
-              </Tr>
-            ))
-          : 'No'}
+              <Td>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  justifyContent='space-evenly'
+                >
+                  <AiFillEdit
+                    size='25px'
+                    cursor='pointer'
+                    onClick={() => editHandler(d.id, d.amount)}
+                  />
+                  <AiFillDelete
+                    size='25px'
+                    cursor='pointer'
+                    onClick={() => deleteHandler(d.id, d.amount)}
+                  />
+                </Box>
+              </Td>
+            </Tr>
+          ) : null
+        )}
       </Tbody>
+      {/* {income?.map((d) => (
+          <Tr key={d.id}>
+            <Td>{d.category}</Td>
+            <Td>₹ {d.amount}</Td>
+
+            <Td>
+              <Box
+                display='flex'
+                alignItems='center'
+                justifyContent='space-evenly'
+              >
+                <AiFillEdit
+                  size='25px'
+                  onClick={() => editHandler(d.id, d.amount)}
+                />
+                <AiFillDelete
+                  size='25px'
+                  onClick={() => deleteHandler(d.id, d.amount)}
+                />
+              </Box>
+            </Td>
+          </Tr>
+        ))}
+      </Tbody> */}
     </Table>
   );
 };

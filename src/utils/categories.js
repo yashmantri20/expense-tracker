@@ -20,7 +20,7 @@ export const expenseType = [
   },
   {
     id: 3,
-    class: 'Transportation',
+    class: 'Travel',
   },
   {
     id: 4,

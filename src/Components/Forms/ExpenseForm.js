@@ -10,10 +10,10 @@ import { MdAddCircle } from 'react-icons/md';
 const ExpenseForm = () => {
   const month = getMonth();
 
-  const [expenseCategory, setExpenseCategory] = useState('salary');
-  const [amount, setAmount] = useState(0);
+  const [expenseCategory, setExpenseCategory] = useState();
+  const [amount, setAmount] = useState();
 
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState();
   const firstField = useRef();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -33,38 +33,47 @@ const ExpenseForm = () => {
     .doc('Total');
 
   const submitHandler = () => {
-    expenseRef.add({
-      category: expenseCategory,
-      amount: amount,
-      description: description,
-      date: new Date().toLocaleDateString('en-US'),
-    });
+    if (expenseCategory && amount && description) {
+      expenseRef.add({
+        category: expenseCategory,
+        amount: amount,
+        description: description,
+        date: new Date().toLocaleDateString('en-US'),
+      });
 
-    r.set(
-      {
-        totalmoney: parseInt(expenseMoney) + parseInt(amount),
-      },
-      { merge: true }
-    );
+      r.set(
+        {
+          totalmoney: parseInt(expenseMoney) + parseInt(amount),
+        },
+        { merge: true }
+      );
 
-    dispatch({
-      type: 'SET_EXPENSE_MONEY',
-      data: parseInt(expenseMoney) + parseInt(amount),
-    });
+      dispatch({
+        type: 'SET_EXPENSE_MONEY',
+        data: parseInt(expenseMoney) + parseInt(amount),
+      });
 
-    dispatch({
-      type: 'SET_REMAINING_MONEY',
-    });
+      dispatch({
+        type: 'SET_REMAINING_MONEY',
+      });
 
-    dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
+      dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
 
-    toast({
-      title: 'Expense Added',
-      status: 'success',
-      duration: 4000,
-      isClosable: true,
-    });
-    onClose();
+      toast({
+        title: 'Expense Added',
+        status: 'success',
+        duration: 4000,
+        isClosable: true,
+      });
+      onClose();
+    } else {
+      toast({
+        title: 'Please Enter All The Data',
+        status: 'error',
+        duration: 4000,
+        isClosable: true,
+      });
+    }
   };
 
   return (

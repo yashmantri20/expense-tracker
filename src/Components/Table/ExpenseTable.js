@@ -8,6 +8,7 @@ import { months } from '../../utils/categories';
 import MobileTable from './MobileTable';
 import DesktopTable from './DesktopTable';
 import { AppContext } from '../../utils/context';
+import { expenseType } from '../../utils/categories';
 
 function ExpenseTable() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -80,7 +81,14 @@ function ExpenseTable() {
         />
       </Box>
       {isOpen ? (
-        <SideDrawer isOpen={isOpen} onClose={onClose} id={id} type='expense' />
+        <SideDrawer
+          isOpen={isOpen}
+          onClose={onClose}
+          id={id}
+          title='expense'
+          name='Expense'
+          type={expenseType}
+        />
       ) : (
         ''
       )}

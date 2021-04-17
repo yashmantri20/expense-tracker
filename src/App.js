@@ -1,24 +1,14 @@
 import './App.css';
 import React, { useContext, useEffect } from 'react';
-import IncomeForm from './Components/Forms/IncomeForm';
-import ExpenseForm from './Components/Forms/ExpenseForm';
-import IncomeTable from './Components/Table/IncomeTable';
-import {
-  Box,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Center,
-} from '@chakra-ui/react';
-import ExpenseTable from './Components/Table/ExpenseTable';
+
+import { Box, Center, Image, Flex, Text, Button } from '@chakra-ui/react';
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
-
+import logo from './assets/logo.png';
 import Tracker from './Components/Cards/Tracker';
 import Login from './Components/Authentication/Login';
 import { AppContext } from './utils/context';
+import Tabs from './Components/Tabs/Tabs';
 
 function App() {
   const [user] = useAuthState(auth);
@@ -28,44 +18,33 @@ function App() {
   } = useContext(AppContext);
 
   useEffect(() => {
-    setTimeout(() => dispatch({ type: 'SET_LOADING', data: false }), 1000);
+    setTimeout(() => dispatch({ type: 'SET_LOADING', data: false }), 3000);
   }, []);
 
   const signOut = () => {
     auth.signOut();
     dispatch({
-      type: 'SET_EXPENSE_MONEY',
-      data: 0,
+      type: 'SET_ALL',
     });
   };
 
-  console.log(loading);
   if (loading) return <h1>Loading..</h1>;
-  return user ? (
-    <Box px={6}>
-      <button className='auth-button' onClick={signOut}>
-        Sign Out
-      </button>
 
+  return user ? (
+    <Box px={4} className='dashboard'>
+      <Center>
+        <Flex width='95%' mt={4}>
+          <Image src={logo} width='40px' height='40px' />
+          <Text my='auto' fontSize={20} pl={2}>
+            Expense Tracker
+          </Text>
+          <Button onClick={signOut} style={{ marginLeft: 'auto' }}>
+            Sign Out
+          </Button>
+        </Flex>
+      </Center>
       <Tracker />
-      <Tabs variant='soft-rounded' colorScheme='green'>
-        <Center>
-          <TabList>
-            <Tab>Income</Tab>
-            <Tab>Expense</Tab>
-          </TabList>
-        </Center>
-        <TabPanels>
-          <TabPanel style={{ width: '100%', padding: '0px' }}>
-            <IncomeTable />
-          </TabPanel>
-          <TabPanel>
-            <ExpenseTable />
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
-      <IncomeForm />
-      <ExpenseForm />
+      <Tabs />
     </Box>
   ) : (
     <Login />

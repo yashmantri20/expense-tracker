@@ -1,8 +1,37 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+.css-r10se1,
+.css-aqesej {
+  color: white !important;
+}
+
+.table-data:nth-child(odd) td {
+  font-weight: 700;
+  font-size: 16px !important;
+  color: black;
+}
+
+.table-data:nth-child(even) td {
+  font-weight: 700;
+  color: white;
+  font-size: 16px !important;
+}
+
+.dashboard {
+  background-color: #272525;
+  color: white;
+  font-family: 'Montserrat';
+}
+
+.tab {
+  color: white;
+}
 
 @media only screen and (min-width: 600px) {
   .mobile-tablet {
     display: none;
+  }
+
+  .dashboard {
+    height: 100vh;
   }
 }
 

@@ -7,8 +7,18 @@ import ExpenseForm from '../Forms/ExpenseForm';
 import IncomeForm from '../Forms/IncomeForm';
 import Card from './Card';
 import PrevMonthCard from './PrevMonthCard';
+import './Card.css';
 
 const Tracker = () => {
+  let size;
+
+  let widthscreen = window.innerWidth;
+  if (widthscreen >= 768 && widthscreen <= 1200) {
+    size = 2;
+  } else {
+    size = 4;
+  }
+
   const {
     dispatch,
     state: {
@@ -71,11 +81,17 @@ const Tracker = () => {
           data: d.data()?.totalmoney || 0,
         });
         dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+        dispatch({ type: 'SET_LOADING', data: false });
       });
   }, []);
 
   return (
-    <SimpleGrid columns={[1, 2, 3, 4]} spacingX={12}>
+    <SimpleGrid
+      columns={[1, 1, 2, size]}
+      spacingX={[4, 4, 6, 8]}
+      mt={12}
+      spacingY={[8, 10, 12, 12]}
+    >
       <Card
         amount={incomeMoney}
         title='Total Income'
