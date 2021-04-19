@@ -23,7 +23,7 @@ const MobileTable = ({
 }) => {
   return (
     <Table variant='striped' colorScheme='gray' size='sm'>
-      <TableCaption>Expense Tracker</TableCaption>
+      <TableCaption>Made with ❤ by Yash Mantri</TableCaption>
       <Thead>
         <Tr>
           <Th>Category</Th>

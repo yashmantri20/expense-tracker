@@ -12,6 +12,8 @@ firebase.initializeApp({
   appId: process.env.REACT_APP_APPID,
 });
 
+firebase.analytics();
+
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
 

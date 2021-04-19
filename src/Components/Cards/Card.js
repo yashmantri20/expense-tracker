@@ -13,7 +13,7 @@ const Card = ({ amount, title, form, inc, color }) => {
         </Box>
         <Box my='auto'>{form}</Box>
       </Flex>
-      {inc >= 0 ? (
+      {inc ? (
         <Box className='percent'>
           {' '}
           {inc < 0 ? (

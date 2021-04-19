@@ -10,6 +10,7 @@ import {
   Box,
   Select,
   Center,
+  Link,
 } from '@chakra-ui/react';
 import { AiFillEdit, AiFillDelete } from 'react-icons/ai';
 
@@ -23,7 +24,7 @@ const DesktopTable = ({
 }) => {
   return (
     <Table variant='striped' colorScheme='gray' size='sm' color='black'>
-      <TableCaption>Expense Tracker</TableCaption>
+      <TableCaption fontSize='15px' color='white'>Made with ❤ by <Link isExternal href='https://www.linkedin.com/in/yashmantri20/'>Yash Mantri</Link></TableCaption>
       <Thead>
         <Tr>
           <Th>Category</Th>

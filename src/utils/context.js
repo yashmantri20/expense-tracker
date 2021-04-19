@@ -40,7 +40,7 @@ const reducer = (state, action) => {
         incomePercentage:
           state.prevMonthIncome > 0
             ? (state.incomeMoney - state.prevMonthIncome) /
-              state.prevMonthIncome
+            state.prevMonthIncome
             : 0,
       };
 
@@ -50,7 +50,7 @@ const reducer = (state, action) => {
         expensePercentage:
           state.prevMonthExpense > 0
             ? (state.expenseMoney - state.prevMonthExpense) /
-              state.prevMonthExpense
+            state.prevMonthExpense
             : 0,
       };
 
@@ -72,7 +72,7 @@ const reducer = (state, action) => {
 
 const AppContext = createContext({
   state: initialState,
-  dispatch: () => {},
+  dispatch: () => { },
 });
 
 function AppContextProvider({ children }) {
