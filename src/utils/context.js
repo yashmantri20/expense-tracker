@@ -41,7 +41,7 @@ const reducer = (state, action) => {
           state.prevMonthIncome > 0
             ? (state.incomeMoney - state.prevMonthIncome) /
             state.prevMonthIncome
-            : 0,
+            : 1,
       };
 
     case 'SET_PERCENTAGE_EXPENSE':
@@ -51,7 +51,7 @@ const reducer = (state, action) => {
           state.prevMonthExpense > 0
             ? (state.expenseMoney - state.prevMonthExpense) /
             state.prevMonthExpense
-            : 0,
+            : 1,
       };
 
     case 'SET_ALL':

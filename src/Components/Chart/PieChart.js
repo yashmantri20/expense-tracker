@@ -1,8 +1,8 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { auth, firestore } from '../../firebase';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { Pie, Bar } from 'react-chartjs-2';
-import { Box, Center, Flex } from '@chakra-ui/layout';
+import { Box, Center } from '@chakra-ui/layout';
 import { AppContext } from '../../utils/context';
 
 const PieChart = () => {

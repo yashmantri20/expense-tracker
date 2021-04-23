@@ -11,15 +11,10 @@ import TabDashboard from './Components/TabPanel/TabDashboard';
 import Loader from './Components/Loader/Loader';
 
 function App() {
-  const [user] = useAuthState(auth);
+  const [user, loading] = useAuthState(auth);
   const {
     dispatch,
-    state: { loading },
   } = useContext(AppContext);
-
-  useEffect(() => {
-    setTimeout(() => dispatch({ type: 'SET_LOADING', data: false }), 1500);
-  }, []);
 
   const signOut = () => {
     auth.signOut();

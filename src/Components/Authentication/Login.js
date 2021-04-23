@@ -4,7 +4,7 @@ import { Box, Flex, Text } from '@chakra-ui/layout';
 import firebase from 'firebase';
 import './Login.css';
 import { auth } from '../../firebase';
-import { toast, useToast } from '@chakra-ui/toast';
+import { useToast } from '@chakra-ui/toast';
 import { Button } from '@chakra-ui/button';
 import { AppContext } from '../../utils/context';
 

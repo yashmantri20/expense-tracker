@@ -1,7 +1,7 @@
 import firebase from 'firebase/app';
 
-import 'firebase/firestore';
 import 'firebase/auth';
+import 'firebase/firestore';
 
 firebase.initializeApp({
   apiKey: process.env.REACT_APP_API_KEY,
@@ -11,8 +11,6 @@ firebase.initializeApp({
   messagingSenderId: process.env.REACT_APP_SENDERID,
   appId: process.env.REACT_APP_APPID,
 });
-
-firebase.analytics();
 
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
