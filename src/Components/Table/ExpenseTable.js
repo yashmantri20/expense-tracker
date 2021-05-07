@@ -40,22 +40,24 @@ function ExpenseTable() {
       .doc(id)
       .delete();
 
-    r.set(
-      {
-        totalmoney: parseInt(expenseMoney) - parseInt(amount),
-      },
-      { merge: true }
-    );
-    dispatch({
-      type: 'SET_EXPENSE_MONEY',
-      data: parseInt(expenseMoney) - parseInt(amount),
-    });
+    if (month === getMonth()) {
+      r.set(
+        {
+          totalmoney: parseInt(expenseMoney) - parseInt(amount),
+        },
+        { merge: true }
+      );
+      dispatch({
+        type: 'SET_EXPENSE_MONEY',
+        data: parseInt(expenseMoney) - parseInt(amount),
+      });
 
-    dispatch({
-      type: 'SET_REMAINING_MONEY',
-    });
+      dispatch({
+        type: 'SET_REMAINING_MONEY',
+      });
 
-    dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
+      dispatch({ type: 'SET_PERCENTAGE_EXPENSE' });
+    }
   };
 
   return (

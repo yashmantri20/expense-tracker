@@ -4,13 +4,15 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { Pie, Bar } from 'react-chartjs-2';
 import { Box, Center } from '@chakra-ui/layout';
 import { AppContext } from '../../utils/context';
+import { getMonth } from '../../utils/getMonth';
 
 const PieChart = () => {
+  const month = getMonth();
   const incomeRef = firestore.collection(
-    `income/${auth.currentUser.uid}/April`
+    `income/${auth.currentUser.uid}/${month}`
   );
   const expenseRef = firestore.collection(
-    `expense/${auth.currentUser.uid}/April`
+    `expense/${auth.currentUser.uid}/${month}`
   );
   const [income] = useCollectionData(incomeRef, { idField: 'id' });
   const [expense] = useCollectionData(expenseRef, { idField: 'id' });

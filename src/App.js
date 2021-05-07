@@ -1,5 +1,5 @@
 import './App.css';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import { Box, Center, Image, Flex, Text, Button } from '@chakra-ui/react';
 import { auth } from './firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';

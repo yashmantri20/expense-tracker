@@ -41,23 +41,25 @@ function IncomeTable() {
       .doc(id)
       .delete();
 
-    r.set(
-      {
-        totalmoney: parseInt(incomeMoney) - parseInt(amount),
-      },
-      { merge: true }
-    );
+    if (month === getMonth()) {
+      r.set(
+        {
+          totalmoney: parseInt(incomeMoney) - parseInt(amount),
+        },
+        { merge: true }
+      );
 
-    dispatch({
-      type: 'SET_INCOME_MONEY',
-      data: parseInt(incomeMoney) - parseInt(amount),
-    });
+      dispatch({
+        type: 'SET_INCOME_MONEY',
+        data: parseInt(incomeMoney) - parseInt(amount),
+      });
 
-    dispatch({
-      type: 'SET_REMAINING_MONEY',
-    });
+      dispatch({
+        type: 'SET_REMAINING_MONEY',
+      });
 
-    dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+      dispatch({ type: 'SET_PERCENTAGE_INCOME' });
+    }
   };
 
   return (
