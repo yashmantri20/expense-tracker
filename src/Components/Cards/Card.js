@@ -13,7 +13,6 @@ const Card = ({ amount, title, form, inc, color }) => {
         </Box>
         <Box my='auto'>{form}</Box>
       </Flex>
-      {console.log(inc)}
       {inc || inc >= 0 ? (
         <Box className='percent'>
           {inc < 0 ? (

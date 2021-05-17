@@ -17,6 +17,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { auth, firestore } from '../../firebase';
+import debounce from 'lodash/debounce'
 import { getMonth } from '../../utils/getMonth';
 import { AppContext } from '../../utils/context';
 
@@ -120,6 +121,8 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
     }
   };
 
+  const DebouncingHandler = debounce(() => { submitHandler() }, 1500)
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -182,7 +185,7 @@ const EditDrawer = ({ id, isOpen, onClose, title, type, name }) => {
             <Button variant='outline' mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme='blue' onClick={submitHandler}>
+            <Button colorScheme='blue' onClick={DebouncingHandler}>
               Update {name}
             </Button>
           </DrawerFooter>

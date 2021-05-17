@@ -1,4 +1,5 @@
 import React from 'react';
+import debounce from 'lodash/debounce'
 import {
   Button,
   DrawerBody,
@@ -27,6 +28,9 @@ const DrawerComponent = ({
   type,
   title,
 }) => {
+
+  const DebouncingHandler = debounce(() => { submitHandler() }, 1500)
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -90,7 +94,7 @@ const DrawerComponent = ({
             <Button variant='outline' mr={3} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme='blue' onClick={submitHandler}>
+            <Button colorScheme='blue' onClick={DebouncingHandler}>
               Add {title}
             </Button>
           </DrawerFooter>
