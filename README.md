@@ -24,7 +24,7 @@ Expense Tracker is a web app that will keep track of your income and expense.
 
 ```
 Email: test@gmail.com
-Password: Test@12345
+Password: Test12345
 ```
 
 ## Contributing
