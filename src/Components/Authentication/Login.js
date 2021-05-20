@@ -6,6 +6,7 @@ import { AppContext } from '../../utils/context';
 import SignIn from './SignIn';
 import ResetPassword from './ResetPassword';
 import './Login.css';
+import Loader from '../Loader/Loader';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,9 +14,36 @@ const Login = () => {
   const { dispatch } = useContext(AppContext);
   const toast = useToast();
   const [toggle, setToggle] = useState(true);
+  const [loading, setLoading] = useState(false)
 
   const signInWithGoogle = () => {
     auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+  };
+
+  const testLogin = () => {
+    setLoading(true);
+    auth
+      .signInWithEmailAndPassword('test@gmail.com', 'Test12345')
+      .then((res) => {
+        setLoading(false)
+        toast({
+          title: 'Welcome Back',
+          status: 'success',
+          duration: 4000,
+          isClosable: true,
+        })
+      }
+      )
+      .catch((e) => {
+        setLoading(false)
+        toast({
+          title: e.message,
+          status: 'error',
+          duration: 4000,
+          isClosable: true,
+        })
+      }
+      );
   };
 
   const signIn = () => {
@@ -84,6 +112,8 @@ const Login = () => {
       );
   };
 
+  if (loading) return <Loader />;
+
   return toggle ? (
     <SignIn
       setEmail={setEmail}
@@ -92,6 +122,7 @@ const Login = () => {
       signInWithGoogle={signInWithGoogle}
       signIn={signIn}
       signUp={signUp}
+      testLogin={testLogin}
     />
   ) : (
     <ResetPassword

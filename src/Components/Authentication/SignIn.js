@@ -8,6 +8,7 @@ const SignIn = ({
   signInWithGoogle,
   signIn,
   signUp,
+  testLogin,
 }) => {
   return (
     <Box className='login'>
@@ -60,6 +61,9 @@ const SignIn = ({
           </Button>
           <Button className='login-btn' onClick={signUp}>
             Sign Up
+          </Button>
+          <Button className='login-btn' onClick={testLogin}>
+            Test Account
           </Button>
         </Flex>
       </Box>
