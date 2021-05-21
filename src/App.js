@@ -9,6 +9,7 @@ import Login from './Components/Authentication/Login';
 import { AppContext } from './utils/context';
 import TabDashboard from './Components/TabPanel/TabDashboard';
 import Loader from './Components/Loader/Loader';
+import GithubRibbon from './utils/GithubRibbon';
 
 function App() {
   const [user, loading] = useAuthState(auth);
@@ -23,23 +24,26 @@ function App() {
 
   if (loading) return <Loader />;
 
-  return user ? (
-    <Box px={4} className='dashboard'>
-      <Center>
-        <Flex width='95%' mt={4}>
-          <Image src={logo} className='logo' />
-          <Text className='heading'>Expense Tracker</Text>
-          <Button onClick={signOut} className='signout-btn'>
-            Sign Out
+  return <>
+    <GithubRibbon />
+    {user ? (
+      <Box px={4} className='dashboard'>
+        <Center>
+          <Flex width='95%' mt={4}>
+            <Image src={logo} className='logo' />
+            <Text className='heading'>Expense Tracker</Text>
+            <Button onClick={signOut} className='signout-btn'>
+              Sign Out
           </Button>
-        </Flex>
-      </Center>
-      <Tracker />
-      <TabDashboard />
-    </Box>
-  ) : (
-    <Login />
-  );
+          </Flex>
+        </Center>
+        <Tracker />
+        <TabDashboard />
+      </Box>
+    ) : (
+      <Login />
+    )}
+  </>
 }
 
 export default App;
